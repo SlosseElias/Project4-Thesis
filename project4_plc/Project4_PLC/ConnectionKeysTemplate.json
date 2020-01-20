@@ -1,0 +1,9 @@
+{
+  "ScopeID": "",
+  "DeviceID": "",
+  "PrimaryKey": "",
+  "OpcUAServerEndpoint": "",
+  "OpcUAIP": "",
+  "TemperatureNode": "",
+  "SetpointHeatingNode": ""
+}
