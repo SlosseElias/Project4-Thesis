@@ -45,7 +45,6 @@ namespace Project4_PLC
             { "Valve 1", ValveEnum.Open.ToString() },
             { "Valve 2", ValveEnum.Open.ToString() },
             { "Valve 3", ValveEnum.Open.ToString() },
-            { "Valve 4", ValveEnum.Open.ToString() }
         };
         enum ValveEnum
         {
@@ -455,14 +454,19 @@ namespace Project4_PLC
         /// <param name="token"></param>
         static async void SendPLCTelemetryAsync(CancellationToken token)
         {
+            rand = new Random();
             
             while (true)
             {
                 // Read the temperature from the OPC UA
                 ReadNode(TemperatureNode);
-                              
+
+                // Test the valve state: failed
                 //DictValves["Valve 1"] = ValveEnum.Failed.ToString();
                 //ValveStateChanged("Valve 1");
+
+                // Generate Test Temperature data
+                Temperature = rand.Next(0, 30);
 
                 // Create the telemetry JSON message.
                 var telemetryDataPoint = new
@@ -641,7 +645,6 @@ namespace Project4_PLC
             {
                 Console.WriteLine();
                 Console.WriteLine(ex.Message);
-                System.Threading.Thread.Sleep(5000);
             }
 
         }

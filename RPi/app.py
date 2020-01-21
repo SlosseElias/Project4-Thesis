@@ -1,3 +1,8 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+# Above sets the encoding, otherwise you could encounter errors while running on the pi.
+# Because of different encoding.
+
 # Copyright (c) Microsoft. All rights reserved.
 # Licensed under the MIT license.
 # Based on
@@ -25,16 +30,18 @@ eventErrorField = "EventError"
 eventText = ""
 
 iotc = iotc.Device(scopeId, deviceKey, deviceId, IOTConnectType.IOTC_CONNECT_SYMM_KEY)
-iotc.setLogLevel(IOTLogLevel.IOTC_LOGGING_API_ONLY)
+
 
 
 # RPi variables
 deviceName = "Raspberry Pi"
 
-oneWirePin = None
+oneWirePin = 4
 ledPin = 18
 
+ledStateName = {True: "ON", False: "OFF"}
 ledState = False
+ledHasChanged = False
 
 
 # Variables
@@ -51,13 +58,17 @@ telemetryFormat = '{{\
 #region CALLBACKS
 def onconnect(info):
   global gCanSend
+  global iotc
+
   print("- [onconnect] => status:" + str(info.getStatusCode()))
   if info.getStatusCode() == 0:
      if iotc.isConnected():
        gCanSend = True
 
+
 def onmessagesent(info):
   print("\t- [onmessagesent] => " + str(info.getPayload()))
+
 
 def oncommand(info):
   print("- [oncommand] => " + info.getTag() + " => " + str(info.getPayload()))
@@ -71,20 +82,17 @@ def oncommand(info):
 def onsettingsupdated(info):
   print("- [onsettingsupdated] => " + info.getTag() + " => " + info.getPayload())
 
-iotc.on("ConnectionStatus", onconnect)
-iotc.on("MessageSent", onmessagesent)
-iotc.on("Command", oncommand)
-iotc.on("SettingsUpdated", onsettingsupdated)
-
 #endregion
 
 
 # Function sendEvent, so we don't have to write the entire line ( function: iotc.sendEvent(...) )
 def sendEvent(field=eventInfoField, data=""):
+  global iotc
   iotc.sendEvent(telemetryFormat.format(field=field, data=data))
 
 
 def sendDeviceProperty():
+  global iotc
   iotc.sendProperty("{\"DeviceID\": \"" + deviceName + "\"}")
 
 
@@ -92,11 +100,17 @@ def sendDeviceProperty():
 
 # Check the state of the LED
 def checkLedState(cmd):
+  global iotc
   global ledState
+  global ledHasChanged
+
+  ledHasChanged = False
+
   if cmd == "ledon":
     # Check if the LED state is false (off)
     if ledState == False:
       ledState = True
+      ledHasChanged = True
     else:
       # Check if the LED state is not already on
       print("LED was already on")
@@ -105,60 +119,60 @@ def checkLedState(cmd):
     # Check if the LED state is True (on)
     if ledState == True:
       ledState = False
+      ledHasChanged = True
     else:
       # Check if the LED state is not already off
       print("LED was already off")
       iotc.sendEvent(telemetryFormat.format(field=eventInfoField, data="LED was already off"))
 
-  changeLedState()
+  changeLedState(ledState)
 
 
 # Change the LED state
-def changeLedState(state=ledState):
-  if state == True:
-    #GPIO.output(ledPin, GPIO.HIGH)
-    sendEvent(eventInfoField, "LED is on")
-  elif state == False:
-    #GPIO.output(ledPin, GPIO.LOW)
-    sendEvent(eventInfoField, "LED is off")
-  else:
-    eventText = "Invalid state! LED didn't change. "
-    sendEvent(eventErrorField, eventText)
+def changeLedState(state):
+  global eventText
 
-  sendLedState()
-  eventText = ""
+  if ledHasChanged:
+    if state == True:
+      #GPIO.output(ledPin, GPIO.HIGH)
+      sendEvent(eventInfoField, "LED is on")
+    elif state == False:
+      #GPIO.output(ledPin, GPIO.LOW)
+      sendEvent(eventInfoField, "LED is off")
+    else:
+      eventText = "Invalid state!"
+      sendEvent(eventErrorField, eventText)
+
+    sendLedState()
+    eventText = ""
 
 
 # Send the LED state
 def sendLedState():
+  global iotc
   iotc.sendTelemetry("{ \
-        \"LedState\": " + str(ledState) + ", \
+        \"LedState\": \"" + str(ledStateName[ledState]) + "\" \
         }")
 
 #endregion
 
-#### TEST !!!!! ####
 #region Temperature Sensor
 # Source (Dutch): http://domoticx.com/raspberry-pi-temperatuur-sensor-ds18b20-uitlezen/
 def readTempSensor():
-  # Define an array (temp).
-  temp = {}
   sensorIds = []
 
   # !!!!!! TEST !!!!!!!
 
-  # Go to "/sys/bus/w1/devices/" on your pi, what comes after that is your sensorId.
-  # It should start with 28-00
+  # Glob: returns a list of paths matching the pathname pattern
+  # One-wire temperature sensor should start with 28-00 (eg. 28-0000054871cb)
   for sensorId in glob.glob("/sys/bus/w1/devices/28-00*/w1_slave"):
     sensorIds.append(sensorId.split("/")[5])
     print(sensorIds)
 
-  #sensorIds = ["28-0000054871cb"]
+  if len(sensorIds) == 1:
+    sensorId = sensorIds[0]
 
-  # loop till all sensorIds have been read.
-  for sensor in range(len(sensorIds)):
-    #tfile = open("/sys/bus/w1/devices/"+ sensorids[sensor] +"/w1_slave") #RPi 1,2 with old kernel.
-    tfile = open("/sys/bus/w1/devices/"+ sensorIds[sensor] +"/w1_slave") #RPi 2,3 with new kernel.
+    tfile = open("/sys/bus/w1/devices/" + sensorId + "/w1_slave")  # RPi 2,3 with new kernel.
     # Read everything from the file and put it in a variable (text).
     text = tfile.read()
     # Close the file after we read it.
@@ -172,10 +186,10 @@ def readTempSensor():
     # We remove the first 2 characters ("t=").
     # We convert it to a float.
     temperature = float(temperaturedata[2:])
-    # We divide the temperature value by 1000 to get the right value.
-    temp[sensor] = temperature / 1000
-    # Print the data to the console.
-    print("sensor", sensor, "=", temp[sensor], "°C.")
+    # We divide the temperature value by 1000 to get the right value and return it.
+    print(temperature / 1000)
+    return temperature / 1000
+
 
 
 #endregion
@@ -188,14 +202,47 @@ def getCPUtemperature():
 
 
 def main():
+  global gCounter
+  global ledState
+  global iotc
+
+  ## Start Configuration
+
+  ## Azure IoT Central
+  #region
+
+  # Set Callback functions
+  iotc.on("ConnectionStatus", onconnect)
+  iotc.on("MessageSent", onmessagesent)
+  iotc.on("Command", oncommand)
+  iotc.on("SettingsUpdated", onsettingsupdated)
+
+  # Set logging
+  iotc.setLogLevel(IOTLogLevel.IOTC_LOGGING_API_ONLY)
+
+  #endregion
+  ## Sensor
+  #region
+
+  # Use the BCM pin numbering
+  #GPIO.setmode(GPIO.BCM)
+  # Set pin 8 to be an output pin
+  #GPIO.setup(ledPin, GPIO.OUT)
+
+  #endregion
+
+  ## Start Main Program
   iotc.connect()
-  GPIO.setmode(GPIO.BCM)
-  GPIO.setup(ledPin, GPIO.OUT)
+
+  # Send the device property and ledstate once at the start of the program, so telemetry is shown in IoT Central.
+  if iotc.isConnected() and gCanSend == True:
+    sendDeviceProperty()
+    sendLedState()
+
 
   while iotc.isConnected():
     iotc.doNext() # do the async work needed to be done for MQTT
     if gCanSend == True:
-      sendDeviceProperty()
 
 
       ## TEST DATA
@@ -205,16 +252,18 @@ def main():
         # The key in the json that will be sent to IoT Central must be equal to the Name in IoT Central!!
         # eg. "Temperature" in the json must equal the Name field "Temperature" in IoT Central
         # iotc.sendTelemetry("{ \
-        # \"Temperature\": " + str(randint(0, 15)) + ", \
+        # \"Temperature\": " + str(readTempSensor()) + ", \
         # \"Pressure\": " + str(randint(850, 1150)) + ", \
         # \"Humidity\": " + str(randint(0, 100)) + ", \
         # \"CPUTemperature\": " + str(getCPUtemperature()) + ", \
         # }")
+        ## TEST DATA
         iotc.sendTelemetry("{ \
-                \"Temperature\": " + str(randint(0, 15)) + ", \
+                \"Temperature\": " + str(randint(0, 25)) + ", \
                 \"Pressure\": " + str(randint(850, 1150)) + ", \
                 \"Humidity\": " + str(randint(0, 100)) + ", \
-                }")
+                \"CPUTemperature\": " + str(randint(0, 100)) + ", \
+        }")
 
 
 
