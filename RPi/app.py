@@ -11,14 +11,11 @@
 import iotc
 from iotc import IOTConnectType, IOTLogLevel
 import RPi.GPIO as GPIO
-import time
-import os
-import sys
 import glob
 from random import randint
 
 
-# IoT Central variables
+# Azure IoT Central variables
 scopeId = ""
 deviceId = ""
 deviceKey = "" # This is the primary key
@@ -32,11 +29,10 @@ eventText = ""
 iotc = iotc.Device(scopeId, deviceKey, deviceId, IOTConnectType.IOTC_CONNECT_SYMM_KEY)
 
 
-
 # RPi variables
 deviceName = "Raspberry Pi"
 
-oneWirePin = 4
+oneWirePin = 4 # Don't change this pin, as it's the default 1-wire pin.
 ledPin = 18
 
 ledStateName = {True: "ON", False: "OFF"}
@@ -45,14 +41,12 @@ ledHasChanged = False
 
 
 # Variables
-gCanSend = False
+gCanSend = False # is True when a connection is established
 gCounter = 0
 
 telemetryFormat = '{{\
                     "{field}": "{data}"\
                   }}'
-
-
 
 
 #region CALLBACKS
@@ -131,6 +125,7 @@ def checkLedState(cmd):
 # Change the LED state
 def changeLedState(state):
   global eventText
+  global ledHasChanged
 
   if ledHasChanged:
     if state == True:
@@ -156,8 +151,9 @@ def sendLedState():
 
 #endregion
 
-#region Temperature Sensor
-# Source (Dutch): http://domoticx.com/raspberry-pi-temperatuur-sensor-ds18b20-uitlezen/
+# Temperature Sensor
+#region
+# Adapted from (Dutch): http://domoticx.com/raspberry-pi-temperatuur-sensor-ds18b20-uitlezen/
 def readTempSensor():
   sensorIds = []
 
@@ -165,40 +161,40 @@ def readTempSensor():
 
   # Glob: returns a list of paths matching the pathname pattern
   # One-wire temperature sensor should start with 28-00 (eg. 28-0000054871cb)
-  for sensorId in glob.glob("/sys/bus/w1/devices/28-00*/w1_slave"):
+  # This code processes only 1 1-wire temp sensor.
+  pathOldKernel = "/sys/bus/w1/devices/28-00*/w1_slave" # RPi 1,2,3 with old kernel
+  pathNewKernel = "/sys/bus/w1/devices/w1_bus_master1/28-00*/w1_slave" # RPi 2,3 with new kernel
+  for sensorId in glob.glob(pathNewKernel):
     sensorIds.append(sensorId.split("/")[5])
     print(sensorIds)
 
-  if len(sensorIds) == 1:
-    sensorId = sensorIds[0]
-
-    tfile = open("/sys/bus/w1/devices/" + sensorId + "/w1_slave")  # RPi 2,3 with new kernel.
-    # Read everything from the file and put it in a variable (text).
-    text = tfile.read()
-    # Close the file after we read it.
-    tfile.close()
-    # We split the text on every newline (\n)
-    # and we select the 2 rule [1]
-    secondline = text.split("\n")[1]
-    # Split the rule in words, split on space (" ").
-    # We select the 10 word
-    temperaturedata = secondline.split(" ")[9]
-    # We remove the first 2 characters ("t=").
-    # We convert it to a float.
-    temperature = float(temperaturedata[2:])
-    # We divide the temperature value by 1000 to get the right value and return it.
-    print(temperature / 1000)
-    return temperature / 1000
-
+  tfile = open(pathNewKernel.replace("28-00*", sensorIds[0]))
+  # Read everything from the file and put it in a variable (text).
+  text = tfile.read()
+  # Close the file after we read it.
+  tfile.close()
+  # We split the text on every newline (\n)
+  # and we select the 2 rule [1]
+  secondline = text.split("\n")[1]
+  # Split the rule in words, split on space (" ").
+  # We select the 10 word
+  temperaturedata = secondline.split(" ")[9]
+  # We remove the first 2 characters ("t=").
+  # We convert it to a float.
+  temperature = float(temperaturedata[2:])
+  # We divide the temperature value by 1000 to get the right value and return it.
+  print(temperature / 1000)
+  return temperature / 1000
 
 
 #endregion
 
-# Get CPU temperature of RPi
-# Source: https://gist.github.com/elbruno/6895e95c97e8dd3318a8d7878231a41f
+# Get ARM CPU temperature of RPi
+# Adapted from: https://www.cyberciti.biz/faq/linux-find-out-raspberry-pi-gpu-and-arm-cpu-temperature-command/
 def getCPUtemperature():
-    res = os.popen('vcgencmd measure_temp').readline()
-    return(res.replace("temp=","").replace("'C\n",""))
+    tFile = open('/sys/class/thermal/thermal_zone0/temp')
+    temp = float(tFile.read())/1000.0
+    return str(temp)
 
 
 def main():
@@ -221,17 +217,18 @@ def main():
   iotc.setLogLevel(IOTLogLevel.IOTC_LOGGING_API_ONLY)
 
   #endregion
+
   ## Sensor
   #region
 
   # Use the BCM pin numbering
   #GPIO.setmode(GPIO.BCM)
-  # Set pin 8 to be an output pin
+  # Set ledPin to be an output pin
   #GPIO.setup(ledPin, GPIO.OUT)
 
   #endregion
 
-  ## Start Main Program
+  ## Start Post-Configuration
   iotc.connect()
 
   # Send the device property and ledstate once at the start of the program, so telemetry is shown in IoT Central.
@@ -257,14 +254,12 @@ def main():
         # \"Humidity\": " + str(randint(0, 100)) + ", \
         # \"CPUTemperature\": " + str(getCPUtemperature()) + ", \
         # }")
-        ## TEST DATA
         iotc.sendTelemetry("{ \
                 \"Temperature\": " + str(randint(0, 25)) + ", \
                 \"Pressure\": " + str(randint(850, 1150)) + ", \
                 \"Humidity\": " + str(randint(0, 100)) + ", \
-                \"CPUTemperature\": " + str(randint(0, 100)) + ", \
+                \"CPUTemperature\": " + str(getCPUtemperature()) + ", \
         }")
-
 
 
       gCounter += 1
