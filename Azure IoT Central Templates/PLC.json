@@ -1,0 +1,230 @@
+{
+  "@id": "urn:eliasSlosse1:PLC_4y:1",
+  "@type": "CapabilityModel",
+  "implements": [
+    {
+      "@id": "urn:eliasSlosse1:PLC_4y:i6i4ig82:1",
+      "@type": "InterfaceInstance",
+      "displayName": {
+        "en": "Interface"
+      },
+      "name": "Interface_rk",
+      "schema": {
+        "@id": "urn:eliasSlosse:AzureIoTEdgeDeviceTemplatePLC_1lh:1",
+        "@type": "Interface",
+        "displayName": {
+          "en": "Interface"
+        },
+        "contents": [
+          {
+            "@id": "urn:eliasSlosse:AzureIoTEdgeDeviceTemplatePLC_1lh:SetpointHeating:1",
+            "@type": "Property",
+            "displayName": {
+              "en": "Setpoint Heating"
+            },
+            "name": "SetpointHeating",
+            "writable": true,
+            "schema": "double",
+            "unit": "Units/Temperature/celsius"
+          },
+          {
+            "@id": "urn:eliasSlosse:AzureIoTEdgeDeviceTemplatePLC_1lh:Temperature:1",
+            "@type": [
+              "Telemetry",
+              "SemanticType/Temperature"
+            ],
+            "displayName": {
+              "en": "Temperature"
+            },
+            "name": "Temperature",
+            "schema": "double",
+            "unit": "Units/Temperature/celsius"
+          },
+          {
+            "@id": "urn:eliasSlosse:AzureIoTEdgeDeviceTemplatePLC_1lh:DeviceID:1",
+            "@type": "Property",
+            "displayName": {
+              "en": "Device ID"
+            },
+            "name": "DeviceID",
+            "schema": "string"
+          },
+          {
+            "@id": "urn:eliasSlosse:PLCV2_593:EmergencyStop:1",
+            "@type": "Command",
+            "commandType": "synchronous",
+            "description": {
+              "en": "Close All Valves"
+            },
+            "displayName": {
+              "en": "Emergency Stop"
+            },
+            "name": "EmergencyStop"
+          },
+          {
+            "@id": "urn:eliasSlosse:PLCV3_3hh:ValveState:1",
+            "@type": "Command",
+            "commandType": "synchronous",
+            "request": {
+              "@id": "urn:eliasSlosse:PLCV3_3hh:ValveState:ValveState:1",
+              "@type": "SchemaField",
+              "description": {
+                "en": "Change state of a valve"
+              },
+              "displayName": {
+                "en": "Valve State"
+              },
+              "name": "ValveState",
+              "schema": {
+                "@id": "urn:eliasSlosse:PLCV3_3hh:ValveState:ValveState:ar3xfc6d:1",
+                "@type": "Object",
+                "displayName": {
+                  "en": "Object"
+                },
+                "fields": [
+                  {
+                    "@id": "urn:eliasSlosse:PLCV3_3hh:ValveState:ValveState:ar3xfc6d:ValveName:1",
+                    "@type": "SchemaField",
+                    "displayName": {
+                      "en": "Valve Name"
+                    },
+                    "name": "ValveName",
+                    "schema": {
+                      "@id": "urn:eliasSlosse:PLCV3_3hh:ValveState:ValveState:ar3xfc6d:ValveName:zkwc09vc:1",
+                      "@type": "Enum",
+                      "displayName": {
+                        "en": "Enum"
+                      },
+                      "valueSchema": "string",
+                      "enumValues": [
+                        {
+                          "@id": "urn:eliasSlosse:PLCV3_3hh:ValveState:ValveState:ar3xfc6d:ValveName:zkwc09vc:Valve1:1",
+                          "@type": "EnumValue",
+                          "displayName": {
+                            "en": "Valve 1"
+                          },
+                          "enumValue": "Valve 1",
+                          "name": "Valve1"
+                        },
+                        {
+                          "@id": "urn:eliasSlosse:PLCV3_3hh:ValveState:ValveState:ar3xfc6d:ValveName:zkwc09vc:Valve2:1",
+                          "@type": "EnumValue",
+                          "displayName": {
+                            "en": "Valve 2"
+                          },
+                          "enumValue": "Valve 2",
+                          "name": "Valve2"
+                        },
+                        {
+                          "@id": "urn:eliasSlosse:PLCV3_3hh:ValveState:ValveState:ar3xfc6d:ValveName:zkwc09vc:Valve3:1",
+                          "@type": "EnumValue",
+                          "displayName": {
+                            "en": "Valve 3"
+                          },
+                          "enumValue": "Valve 3",
+                          "name": "Valve3"
+                        },
+                        {
+                          "@id": "urn:eliasSlosse:PLCV3_3hh:ValveState:ValveState:ar3xfc6d:ValveName:zkwc09vc:Valve4:1",
+                          "@type": "EnumValue",
+                          "displayName": {
+                            "en": "Valve 4"
+                          },
+                          "enumValue": "Valve 4",
+                          "name": "Valve4"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "@id": "urn:eliasSlosse:PLCV3_3hh:ValveState:ValveState:ar3xfc6d:ValveState:1",
+                    "@type": "SchemaField",
+                    "displayName": {
+                      "en": "Valve State"
+                    },
+                    "name": "ValveState",
+                    "schema": {
+                      "@id": "urn:eliasSlosse:PLCV3_3hh:ValveState:ValveState:ar3xfc6d:ValveState:nz9ncydcl:1",
+                      "@type": "Enum",
+                      "displayName": {
+                        "en": "Enum"
+                      },
+                      "valueSchema": "string",
+                      "enumValues": [
+                        {
+                          "@id": "urn:eliasSlosse:PLCV3_3hh:ValveState:ValveState:ar3xfc6d:ValveState:nz9ncydcl:Open:1",
+                          "@type": "EnumValue",
+                          "displayName": {
+                            "en": "Open"
+                          },
+                          "enumValue": "Open",
+                          "name": "Open"
+                        },
+                        {
+                          "@id": "urn:eliasSlosse:PLCV3_3hh:ValveState:ValveState:ar3xfc6d:ValveState:nz9ncydcl:Close:1",
+                          "@type": "EnumValue",
+                          "displayName": {
+                            "en": "Close"
+                          },
+                          "enumValue": "Close",
+                          "name": "Close"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            },
+            "displayName": {
+              "en": "Valve State"
+            },
+            "name": "ValveState"
+          },
+          {
+            "@id": "urn:eliasSlosse:PLCV4_6vj:EventInfo:1",
+            "@type": [
+              "Telemetry",
+              "SemanticType/Event"
+            ],
+            "displayName": {
+              "en": "Event Information"
+            },
+            "name": "EventInfo",
+            "schema": "string"
+          },
+          {
+            "@id": "urn:eliasSlosse:PLCV4_6vj:EventWarn:1",
+            "@type": [
+              "Telemetry",
+              "SemanticType/Event"
+            ],
+            "displayName": {
+              "en": "Event Warning"
+            },
+            "name": "EventWarn",
+            "schema": "string"
+          },
+          {
+            "@id": "urn:eliasSlosse:PLCV4_6vj:EventError:1",
+            "@type": [
+              "Telemetry",
+              "SemanticType/Event"
+            ],
+            "displayName": {
+              "en": "Event Error"
+            },
+            "name": "EventError",
+            "schema": "string"
+          }
+        ]
+      }
+    }
+  ],
+  "displayName": {
+    "en": "PLC"
+  },
+  "contents": [],
+  "@context": [
+    "http://azureiot.com/v1/contexts/IoTModel.json"
+  ]
+}

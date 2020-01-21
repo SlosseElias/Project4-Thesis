@@ -1,0 +1,187 @@
+{
+  "@id": "urn:eliasSlosse1:RPi_6m2:2",
+  "@type": "CapabilityModel",
+  "implements": [
+    {
+      "@id": "urn:eliasSlosse1:RPi_6m2:_hgmn_5x:1",
+      "@type": "InterfaceInstance",
+      "displayName": {
+        "en": "Interface"
+      },
+      "name": "RPi_4pp",
+      "schema": {
+        "@id": "urn:eliasSlosse1:RPi_4pp:1",
+        "@type": "Interface",
+        "displayName": {
+          "en": "Interface"
+        },
+        "contents": [
+		  {
+            "@id": "urn:eliasSlosse1:RPi_4pp:DeviceID:1",
+            "@type": "Property",
+            "displayName": {
+              "en": "Device ID"
+            },
+            "name": "DeviceID",
+            "schema": "string"
+          },
+          {
+            "@id": "urn:eliasSlosse1:RPi_4pp:Temperature:1",
+            "@type": [
+              "Telemetry",
+              "SemanticType/Temperature"
+            ],
+            "displayName": {
+              "en": "Temperature"
+            },
+            "name": "Temperature",
+            "schema": "double",
+            "unit": "Units/Temperature/celsius"
+          },
+          {
+            "@id": "urn:eliasSlosse1:RPi_4pp:Humidity:1",
+            "@type": [
+              "Telemetry",
+              "SemanticType/Humidity"
+            ],
+            "displayName": {
+              "en": "Humidity"
+            },
+            "name": "Humidity",
+            "schema": "double",
+            "unit": "Units/Humidity/percent"
+          },
+          {
+            "@id": "urn:eliasSlosse1:RPi_4pp:Pressure:1",
+            "@type": [
+              "Telemetry",
+              "SemanticType/Pressure"
+            ],
+            "displayName": {
+              "en": "Pressure"
+            },
+            "name": "Pressure",
+            "schema": "double",
+            "unit": "Units/Pressure/kiloPascal"
+          },
+		  {
+            "@id": "urn:eliasSlosse1:RPi_4pp:LedState:1",
+            "@type": [
+              "Telemetry",
+              "SemanticType/State"
+            ],
+            "displayName": {
+              "en": "Led State"
+            },
+            "name": "LedState",
+            "schema": {
+              "@id": "urn:eliasSlosse1:RPi_4pp:LedState:xmovwknd:1",
+              "@type": "Enum",
+              "valueSchema": "string",
+              "enumValues": [
+                {
+                  "@id": "urn:eliasSlosse1:RPi_4pp:LedState:xmovwknd:On:1",
+                  "@type": "EnumValue",
+                  "displayName": {
+                    "en": "On"
+                  },
+                  "enumValue": "On",
+                  "name": "On"
+                },
+                {
+                  "@id": "urn:eliasSlosse1:RPi_4pp:LedState:xmovwknd:Off:1",
+                  "@type": "EnumValue",
+                  "displayName": {
+                    "en": "Off"
+                  },
+                  "enumValue": "Off",
+                  "name": "Off"
+                }
+              ]
+            }
+          },
+		  {
+            "@id": "urn:eliasSlosse1:RPi_4pp:CPUTemperature:1",
+            "@type": [
+              "Telemetry",
+              "SemanticType/Temperature"
+            ],
+            "displayName": {
+              "en": "CPU Temperature"
+            },
+            "name": "CPUTemperature",
+            "schema": "double",
+            "unit": "Units/Temperature/celsius"
+          },		  
+          {
+            "@id": "urn:eliasSlosse1:RPi_4pp:LedTurnOn:1",
+            "@type": "Command",
+            "commandType": "synchronous",
+            "description": {
+              "en": "This will turn on the LED."
+            },
+            "displayName": {
+              "en": "Led On"
+            },
+            "name": "LedOn"
+          },
+          {
+            "@id": "urn:eliasSlosse1:RPi_4pp:LedTurnOff:1",
+            "@type": "Command",
+            "commandType": "synchronous",
+            "description": {
+              "en": "This will turn off the LED."
+            },
+            "displayName": {
+              "en": "Led Off"
+            },
+            "name": "LedOff"
+          },
+          {
+            "@id": "urn:eliasSlosse1:RPi_4pp:EventInfo:1",
+            "@type": [
+              "Telemetry",
+              "SemanticType/Event"
+            ],
+            "displayName": {
+              "en": "Event Information"
+            },
+            "name": "EventInfo",
+            "schema": "string"
+          },
+          {
+            "@id": "urn:eliasSlosse1:RPi_4pp:EventWarn:1",
+            "@type": [
+              "Telemetry",
+              "SemanticType/Event"
+            ],
+            "displayName": {
+              "en": "Event Warning"
+            },
+            "name": "EventWarn",
+            "schema": "string"
+          },
+          {
+            "@id": "urn:eliasSlosse1:RPi_4pp:EventError:1",
+            "@type": [
+              "Telemetry",
+              "SemanticType/Event"
+            ],
+            "displayName": {
+              "en": "Event Error"
+            },
+            "name": "EventError",
+            "schema": "string"
+          }
+        ]
+      }
+    }
+  ],
+  "displayName": {
+    "en": "RPi"
+  },
+  "contents": [],
+  "@context": [
+    "http://azureiot.com/v1/contexts/IoTModel.json"
+  ]
+}
