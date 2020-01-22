@@ -473,7 +473,7 @@ namespace Project4_PLC
                 //ValveStateChanged("Valve 1");
 
                 // Generate Test Temperature data
-                Temperature = rand.Next(0, 30);
+                //Temperature = rand.Next(0, 30);
 
                 // Create the telemetry JSON message.
                 var telemetryDataPoint = new

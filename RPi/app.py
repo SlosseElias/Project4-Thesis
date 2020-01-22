@@ -220,42 +220,47 @@ def main():
 
   ## Sensor
   #region
+  try:
+    # Use the BCM pin numbering
+    GPIO.setmode(GPIO.BCM)
+    # Set ledPin to be an output pin
+    GPIO.setup(ledPin, GPIO.OUT)
 
-  # Use the BCM pin numbering
-  GPIO.setmode(GPIO.BCM)
-  # Set ledPin to be an output pin
-  GPIO.setup(ledPin, GPIO.OUT)
+    #endregion
 
-  #endregion
+    ## Start Post-Configuration
+    iotc.connect()
 
-  ## Start Post-Configuration
-  iotc.connect()
-
-  # Send the device property and ledstate once at the start of the program, so telemetry is shown in IoT Central.
-  if iotc.isConnected() and gCanSend == True:
-    sendDeviceProperty()
-    sendLedState()
+    # Send the device property and ledstate once at the start of the program, so telemetry is shown in IoT Central.
+    if iotc.isConnected() and gCanSend == True:
+      sendDeviceProperty()
+      sendLedState()
 
 
-  while iotc.isConnected():
-    iotc.doNext() # do the async work needed to be done for MQTT
-    if gCanSend == True:
+    while iotc.isConnected():
+      iotc.doNext() # do the async work needed to be done for MQTT
+      if gCanSend == True:
 
-      # Do this when gCounter is 20.
-      if gCounter % 20 == 0:
-        gCounter = 0
-        print("Sending telemetry..")
-        # The key in the json that will be sent to IoT Central must be equal to the Name in IoT Central!!
-        # eg. "Temperature" in the json must equal (case sensitive) the Name field "Temperature" in IoT Central
-        # if you want real temp data use function: readTempSensor()
-        iotc.sendTelemetry("{ \
-                \"Temperature\": " + str(randint(0, 25)) + ", \
-                \"Pressure\": " + str(randint(850, 1150)) + ", \
-                \"Humidity\": " + str(randint(0, 100)) + ", \
-                \"CPUTemperature\": " + str(getCPUtemperature()) + ", \
-        }")
+        # Do this when gCounter is 20.
+        if gCounter % 20 == 0:
+          gCounter = 0
+          print("Sending telemetry..")
+          # The key in the json that will be sent to IoT Central must be equal to the Name in IoT Central!!
+          # eg. "Temperature" in the json must equal (case sensitive) the Name field "Temperature" in IoT Central
+          # if you want real temp data use function: readTempSensor()
+          iotc.sendTelemetry("{ \
+                  \"Temperature\": " + str(randint(0, 25)) + ", \
+                  \"Pressure\": " + str(randint(850, 1150)) + ", \
+                  \"Humidity\": " + str(randint(0, 100)) + ", \
+                  \"CPUTemperature\": " + str(getCPUtemperature()) + ", \
+          }")
 
-      gCounter += 1
+        gCounter += 1
+
+  except Exception as ex:
+    print("Exception: " + str(ex))
+  finally:
+    GPIO.cleanup()
 
 if __name__ == '__main__':
     main()

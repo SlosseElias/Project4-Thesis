@@ -4,7 +4,6 @@
     <list default="true" id="f1d84f33-ac1a-4433-ab3b-423a1acb498e" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PLC/Project4_PLC/Program.cs" afterPath="$PROJECT_DIR$/PLC/Project4_PLC/Program.cs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/README.md" afterPath="$PROJECT_DIR$/README.md" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/RPi/app.py" afterPath="$PROJECT_DIR$/RPi/app.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -22,8 +21,8 @@
       <file leaf-file-name="app.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/RPi/app.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="4872">
-              <caret line="243" column="36" lean-forward="false" selection-start-line="243" selection-start-column="36" selection-end-line="243" selection-end-column="36" />
+            <state relative-caret-position="4599">
+              <caret line="245" column="22" lean-forward="true" selection-start-line="245" selection-start-column="22" selection-end-line="245" selection-end-column="22" />
               <folding>
                 <element signature="e#348#359#0" expanded="true" />
                 <element signature="e#5423#5430#0" expanded="false" />
@@ -66,7 +65,7 @@
     <detection-done>true</detection-done>
     <sorting>DEFINITION_ORDER</sorting>
   </component>
-  <component name="ProjectFrameBounds" extendedState="1">
+  <component name="ProjectFrameBounds">
     <option name="x" value="654" />
     <option name="y" value="7" />
     <option name="width" value="1275" />
@@ -88,7 +87,6 @@
     </navigator>
     <panes>
       <pane id="Scratches" />
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -105,6 +103,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -162,8 +161,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="654" y="7" width="1275" height="1030" extended-state="1" />
-    <editor active="true" />
+    <frame x="654" y="7" width="1275" height="1030" extended-state="0" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.22752586" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -199,6 +197,25 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/RPi/app.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="e#348#359#0" expanded="true" />
+            <element signature="e#5423#5430#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python38/Lib/site-packages/gpio4/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="4158">
+          <caret line="202" column="14" lean-forward="false" selection-start-line="202" selection-start-column="14" selection-end-line="202" selection-end-column="14" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/RPi/app.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -270,8 +287,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/RPi/app.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4872">
-          <caret line="243" column="36" lean-forward="false" selection-start-line="243" selection-start-column="36" selection-end-line="243" selection-end-column="36" />
+        <state relative-caret-position="4599">
+          <caret line="245" column="22" lean-forward="true" selection-start-line="245" selection-start-column="22" selection-end-line="245" selection-end-column="22" />
           <folding>
             <element signature="e#348#359#0" expanded="true" />
             <element signature="e#5423#5430#0" expanded="false" />
