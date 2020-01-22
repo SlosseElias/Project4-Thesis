@@ -33,7 +33,7 @@ iotc = iotc.Device(scopeId, deviceKey, deviceId, IOTConnectType.IOTC_CONNECT_SYM
 deviceName = "Raspberry Pi"
 
 oneWirePin = 4 # Don't change this pin, as it's the default 1-wire pin.
-ledPin = 18
+ledPin = 18 # Pin for the LED.
 
 ledStateName = {True: "ON", False: "OFF"}
 ledState = False
@@ -129,10 +129,10 @@ def changeLedState(state):
 
   if ledHasChanged:
     if state == True:
-      #GPIO.output(ledPin, GPIO.HIGH)
+      GPIO.output(ledPin, GPIO.HIGH)
       sendEvent(eventInfoField, "LED is on")
     elif state == False:
-      #GPIO.output(ledPin, GPIO.LOW)
+      GPIO.output(ledPin, GPIO.LOW)
       sendEvent(eventInfoField, "LED is off")
     else:
       eventText = "Invalid state!"
@@ -222,9 +222,9 @@ def main():
   #region
 
   # Use the BCM pin numbering
-  #GPIO.setmode(GPIO.BCM)
+  GPIO.setmode(GPIO.BCM)
   # Set ledPin to be an output pin
-  #GPIO.setup(ledPin, GPIO.OUT)
+  GPIO.setup(ledPin, GPIO.OUT)
 
   #endregion
 
@@ -241,26 +241,19 @@ def main():
     iotc.doNext() # do the async work needed to be done for MQTT
     if gCanSend == True:
 
-
-      ## TEST DATA
+      # Do this when gCounter is 20.
       if gCounter % 20 == 0:
         gCounter = 0
         print("Sending telemetry..")
         # The key in the json that will be sent to IoT Central must be equal to the Name in IoT Central!!
-        # eg. "Temperature" in the json must equal the Name field "Temperature" in IoT Central
-        # iotc.sendTelemetry("{ \
-        # \"Temperature\": " + str(readTempSensor()) + ", \
-        # \"Pressure\": " + str(randint(850, 1150)) + ", \
-        # \"Humidity\": " + str(randint(0, 100)) + ", \
-        # \"CPUTemperature\": " + str(getCPUtemperature()) + ", \
-        # }")
+        # eg. "Temperature" in the json must equal (case sensitive) the Name field "Temperature" in IoT Central
+        # if you want real temp data use function: readTempSensor()
         iotc.sendTelemetry("{ \
                 \"Temperature\": " + str(randint(0, 25)) + ", \
                 \"Pressure\": " + str(randint(850, 1150)) + ", \
                 \"Humidity\": " + str(randint(0, 100)) + ", \
                 \"CPUTemperature\": " + str(getCPUtemperature()) + ", \
         }")
-
 
       gCounter += 1
 

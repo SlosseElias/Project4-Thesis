@@ -3,6 +3,8 @@ Thesis project (project 4) for MCT - Howest Belgium
 
 In the last year Bachelor MCT@Howest Kortrijk, Belgium (www.mct.be) we have to make a project which is used for the thesis.
 
+This project is built for testing purpose only. DO NOT use this in a production environment!
+
 # PLC
 Here you will find the PLC Visual Studio project.
 

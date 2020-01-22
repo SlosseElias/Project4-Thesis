@@ -105,11 +105,18 @@ namespace Project4_PLC
                     SecurityConfiguration = new SecurityConfiguration
                     {
                         #region Comment
+                        /// Summary
+                        #region
                         // These directories are locally on your computer.
                         // Generate self-signed (untrusted) client certificate(s). 
                         // AutoAcceptUntrustedCertificates = true: Use this for testing only or if application does not require server certificate check.
-                        // More information: https://opcfoundation.org/wp-content/uploads/2014/05/OPC-UA_Security_Model_for_Administrators_V1.00.pdf
-                        // (this is for another library, but it's the same idea) http://opclabs.doc-that.com/files/onlinedocs/QuickOpc/Latest/User's%20Guide%20and%20Reference-QuickOPC/Trusting%20Server%20Instance%20Certificate.html
+
+                        // Explanation of how this works (this is for another library, but it's the same idea): http://opclabs.doc-that.com/files/onlinedocs/QuickOpc/Latest/User's%20Guide%20and%20Reference-QuickOPC/Trusting%20Server%20Instance%20Certificate.html
+                        #endregion
+
+                        /// Full information of security model and certificates of OPC UA. It's quite a big document, but worth reading if you care about security (you should).
+                        // More information (Security and certificates): https://opcfoundation.org/wp-content/uploads/2014/05/OPC-UA_Security_Model_for_Administrators_V1.00.pdf
+
                         // If you want to use cloud for certificates, check this out: https://docs.microsoft.com/bs-latn-ba/azure/iot-accelerators/overview-opc-vault-architecture
                         #endregion
                         ApplicationCertificate = new CertificateIdentifier { StoreType = @"Directory", StorePath = @"%CommonApplicationData%\OPC Foundation\CertificateStores\MachineDefault", SubjectName = Utils.Format(@"CN={0}, DC={1}", ApplicationName, System.Net.Dns.GetHostName()) },
